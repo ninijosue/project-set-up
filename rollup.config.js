@@ -5,15 +5,28 @@ import cleanup from "rollup-plugin-cleanup";
 import rimraf from "rimraf";
 import htmlEng from "./lib/rollup-plugin-copyFile.js";
 
-rimraf.sync("./build");
+rimraf.sync("build");
 
+const globby = require('globby');
+
+const paths = {};
+globby.sync(["**src/app.js", "**/components/products*/index.js"]).forEach((inputFile)=>{
+    const p = inputFile.split('/');
+    let output = p[p.length - 2];
+    if(output === "src") output = "index";
+    paths[ output ] = inputFile; 
+});
+console.log(paths);
+
+    
 export default {
-    input: 'src/app.js',
+    input: paths,
     output: {
-      file: 'build/bundle.js',
-      format: 'umd',
-      name: "setup"
-    },
+      dir: "./build/",
+      format: "amd",
+      entryFileNames: "[name].js",
+      chunkFileNames: "[name]-[hash].js"
+  },
     plugins:[
         terser(),
         cleanup({
@@ -21,7 +34,7 @@ export default {
         }),
         resolve(),
         babel({
-            exclude: 'node_modules/**'
+            exclude: 'node_modules/**',
           }),
         htmlEng({
             src: "./src/view/index.html",

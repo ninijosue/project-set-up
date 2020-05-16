@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 
-class Index  extends LitElement {
+export default class Products  extends LitElement {
 
   constructor() {
     super();

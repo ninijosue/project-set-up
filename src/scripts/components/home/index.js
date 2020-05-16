@@ -1,6 +1,6 @@
 import { LitElement, html} from 'lit-element';
 
-export default class Home  extends LitElement {
+export default class home  extends LitElement {
 
   constructor() {
     super();
